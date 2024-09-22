@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Medical Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="home-container">
+        <h1>Welcome to the Medical Test</h1>
+        <button id="startTest">Start the Test</button>
+        <button id="exitHome">Exit to Home</button>
+    </div>
+
+    <script>
+        document.getElementById('startTest').addEventListener('click', function () {
+            window.location.href = 'tasks.html';  // Go to the test page
+        });
+
+        document.getElementById('exitHome').addEventListener('click', function () {
+            window.location.href = 'index.html';  // Go back to login
+        });
+    </script>
+</body>
+</html>

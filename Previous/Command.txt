@@ -1,0 +1,5 @@
+i want to make a website for medical purpose and i want to design a login page with username and password  and after login i need 2 buttons start the test and exit to home page and when start button is pressed i should go to 2nd page at which 
+i need it start a timer for totally 5 minutes with totally 200 different inputs from the string(pbdqr) from this string only a single letter should be shown and their must be a box at which the pointer must be set automatically and the user just have to type the letter shown there. it should be with a blurred black gradient background with text at half size of the screen in white color. there must be 50 inputs and 30 seconds gap and next 50 inputs and 30 seconds gap for 5 minutes similarly for 5 minutes it has to be done 
+
+after the test there should be another button continue to go to test 2 
+
