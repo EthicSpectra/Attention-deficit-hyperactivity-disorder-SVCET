@@ -207,66 +207,11 @@
                 <option value="Other">Analyst</option>
             </select>
         </div>
-        <button type="button" window.location.href = 'dr.login.html';">Continue to Test 2</button>
+        <button type="button" onclick="location.href='dr.login.html';">Continue to Test 2</button>
+
+
+
     </form>
 </div>
-
-<script>
-    // Generate a 6-digit UID
-    function generateUID() {
-        return Math.floor(100000 + Math.random() * 900000);
-    }
-
-    // Set UID on page load
-    document.getElementById('uid').value = generateUID();
-
-    // Handle form submission
-    const form = document.getElementById('userForm');
-    const successMessage = document.getElementById('successMessage');
-    const downloadBtn = document.getElementById('downloadBtn');
-    let userData = [];
-
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        // Collect form data
-        const uid = document.getElementById('uid').value;
-        const firstName = document.getElementById('firstName').value;
-        const lastName = document.getElementById('lastName').value;
-        const gender = document.getElementById('gender').value;
-        const dob = document.getElementById('dob').value;
-        const assessmentDate = document.getElementById('assessmentDate').value;
-
-        // Append data to userData array
-        userData.push([uid, firstName, lastName, gender, dob, assessmentDate]);
-
-        // Show success message
-        successMessage.textContent = "Details submitted successfully!";
-        downloadBtn.style.display = "inline-block";
-
-        // Clear form fields
-        form.reset();
-        document.getElementById('uid').value = generateUID(); // Generate new UID for the next entry
-    });
-
-    // Download Excel (CSV) function
-    function downloadExcel() {
-        let csvContent = "data:text/csv;charset=utf-8,UID,First Name,Last Name,Gender,DOB,Date of Assessment\n";
-        userData.forEach(function(rowArray) {
-            let row = rowArray.join(",");
-            csvContent += row + "\n";
-        });
-
-        // Create a download link
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "user_details.csv");
-
-        // Trigger download
-        link.click();
-    }
-</script>
-
 </body>
 </html>
