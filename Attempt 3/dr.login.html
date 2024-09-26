@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient details</title>
+    <title>StaFF Registeration</title>
     <style>
         /* Background settings for futuristic look */
         body {
@@ -174,19 +174,15 @@
 <body>
 
 <div class="container">
-    <h2>Patient Details </h2>
+    <h2>Staff Details </h2>
     <form id="userForm">
         <div class="form-group">
             <label for="uid">UID :</label>
             <input type="text" id="uid" name="uid" readonly>
         </div>
         <div class="form-group">
-            <label for="firstName">First Name:</label>
+            <label for="firstName">Full Name:</label>
             <input type="text" id="firstName" name="firstName" placeholder="Enter your first name..." required>
-        </div>
-        <div class="form-group">
-            <label for="lastName">Last Name:</label>
-            <input type="text" id="lastName" name="lastName" placeholder="Enter your last name..." required>
         </div>
         <div class="form-group">
             <label for="gender">Gender:</label>
@@ -202,9 +198,17 @@
             <input type="date" id="dob" name="dob" required>
         </div>
         <div class="form-group">
-            <label for="assessmentDate">Date of Assessment:</label>
-            <input type="date" id="assessmentDate" name="assessmentDate" required>
+            <label for="gender">Desigination</label>
+            <select id="gender" name="gender" required>
+                <option value="">Select Desigination</option>
+                <option value="Male">Senior Doctor</option>
+                <option value="Female">Assitant Doctor</option>
+                <option value="Other">Attendant</option>
+                <option value="Other">Analyst</option>
+
+            </select>
         </div>
+        
         <button type="submit">Submit</button>
         <button type="button" id="downloadBtn" onclick="downloadExcel()">Download Excel</button>
         <p class="success-message" id="successMessage"></p>
