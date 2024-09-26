@@ -3,294 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alphabet Test</title>
+    <title>Color Game</title>
     <style>
         body {
-            background-color: black;
-            color: white;
             font-family: Arial, sans-serif;
+            text-align: center;
             margin: 0;
             padding: 0;
+            background-color: #f0f0f0;
         }
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding: 20px;
-            gap: 10px;
-        }
-        .alphabet-grid {
-            display: flex;
-            flex-wrap: wrap;
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(3, 150px); /* Increased size */
+            gap: 20px; /* Increased gap */
             justify-content: center;
-            margin: 0;
-            width: 100%;
+            margin-top: 50px;
+            display: none; /* Hide grid initially */
         }
-        .alphabet-grid div {
-            background-color: white;
-            color: black;
-            font-size: 2em;
-            margin: 10px;
-            padding: 20px;
-            width: 60px;
-            height: 60px;
-            text-align: center;
-            border-radius: 5px;
+        .color-box {
+            width: 150px; /* Increased size */
+            height: 150px; /* Increased size */
+            border: 4px solid black; /* Larger border */
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s; /* Smooth pop-out and shadow effect */
         }
-        .right-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
+        .color-box:hover {
+            transform: scale(1.2); /* Pop-out effect on hover */
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.5); /* Shadow effect */
         }
-        .timer {
-            font-size: 5em;
-            margin: 20px 0;
+        .color-box:active {
+            background-color: #ffffff; /* Change to white when clicked */
+            transition: background-color 0.1s; /* Flash effect */
         }
-        input[type="text"] {
-            font-size: 1.5em;
-            padding: 10px;
-            width: 100%;
-            max-width: 300px;
+        #timer {
+            font-size: 24px;
             margin-top: 20px;
-            text-align: center;
+        }
+        #popup {
+            display: none; /* Hide popup initially */
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 2px solid black;
         }
         button {
-            font-size: 1.2em;
-            padding: 10px 20px;
+            font-size: 16px;
+            padding: 12px 24px;
             margin-top: 20px;
-            cursor: pointer;
-            border: 4px solid black; /* Black border */
-            background-color: white; /* White background */
-            color: black; /* Black text */
+            background-color: #28a745; /* Cool green background */
+            color: white;
+            border: none;
             border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
         }
-        .result-table {
-            margin-top: 20px;
-            font-size: 1.5em;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
+        button:hover {
+            background-color: #218838; /* Darker green on hover */
+            transform: scale(1.1); /* Pop-out effect */
         }
-        .result-table th, .result-table td {
-            padding: 10px;
-            border: 1px solid white;
+        button:active {
+            background-color: #1e7e34; /* Even darker green when clicked */
         }
-        .hidden {
-            display: none;
+        button#downloadBtn {
+            background-color: #007bff; /* Blue background for download button */
         }
-        .text2size {
-            text-align: center;
-            font-size: 50px;
-        }
-        .current-number {
-            font-size: 1.5em;
-            margin: 10px 0;
-        }
-        .current-numbers {
-            font-size: 8em;
-            margin: 10px 0;
-        }
-        @media (min-width: 768px) {
-            .container {
-                flex-direction: row;
-            }
-            .alphabet-grid {
-                width: 40%;
-            }
-            .right-section {
-                width: 50%;
-            }
+        button#downloadBtn:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <h1 class="text2size">Stage 2 of Testing</h1>
 
-    <div class="container">
-        <!-- Left section: Alphabet grid -->
-        <div class="alphabet-grid">
-            <div>A<br>1</div>
-            <div>B<br>2</div>
-            <div>C<br>3</div>
-            <div>D<br>4</div>
-            <div>E<br>5</div>
-            <div>F<br>6</div>
-            <div>G<br>7</div>
-            <div>H<br>8</div>
-            <div>I<br>9</div>
-            <div>J<br>10</div>
-            <div>K<br>11</div>
-            <div>L<br>12</div>
-            <div>M<br>13</div>
-            <div>N<br>14</div>
-            <div>O<br>15</div>
-            <div>P<br>16</div>
-            <div>Q<br>17</div>
-            <div>R<br>18</div>
-            <div>S<br>19</div>
-            <div>T<br>20</div>
-            <div>U<br>21</div>
-            <div>V<br>22</div>
-            <div>W<br>23</div>
-            <div>X<br>24</div>
-            <div>Y<br>25</div>
-            <div>Z<br>26</div>
-        </div>
-        
-        <!-- Right section: Input and timer -->
-        <div class="right-section">
-            <div class="timer" id="timer">00:10</div>
-            <div class="current-number" id="currentNumber">Watch here Carefully </div>
-           
-            <input type="text" id="inputField" placeholder="Enter the corresponding alphabet..." maxlength="1">
-            <button onclick="startTest()">Start Test</button>
+<h1>Color Click Test</h1>
 
-            <!-- Table to display results -->
-            <table class="result-table hidden" id="resultTable">
-                <thead>
-                    <tr>
-                        <th>Round</th>
-                        <th>Correct Answer</th>
-                        <th>Your Answer</th>
-                        <th>Result</th>
-                    </tr>
-                </thead>
-                <tbody id="resultBody">
-                    <!-- Results will be appended here -->
-                </tbody>
-            </table>
+<button id="startButton">Start Test</button>
 
-            <!-- Download button -->
-            <button class="hidden" id="downloadBtn" onclick="downloadResults()">Download Results</button>
+<div id="grid">
+    <div id="green" class="color-box" style="background-color: green;"></div>
+    <div id="red" class="color-box" style="background-color: red;"></div>
+    <div id="yellow" class="color-box" style="background-color: yellow;"></div>
+    <div id="violet" class="color-box" style="background-color: violet;"></div>
+    <div id="blue" class="color-box" style="background-color: blue;"></div>
+    <div id="orange" class="color-box" style="background-color: orange;"></div>
+</div>
 
-            <!-- Go to Test 3 button -->
-            <button class="hidden" id="goToTest3Btn" onclick="goToNextTest()">Go to Test 3</button>
-        </div>
-    </div>
+<div id="timer">Time left: 60s</div>
 
-    <script>
-        let timeLeft = 10;
-        let timer;
-        let correctAnswers = 0;
-        let attempts = 0;
-        const totalRounds = 5;
-        let currentRandomNumber;
-        const results = []; // To store results
-        const alphabetMap = {
-            1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F', 7: 'G', 8: 'H', 9: 'I', 
-            10: 'J', 11: 'K', 12: 'L', 13: 'M', 14: 'N', 15: 'O', 16: 'P', 17: 'Q', 
-            18: 'R', 19: 'S', 20: 'T', 21: 'U', 22: 'V', 23: 'W', 24: 'X', 25: 'Y', 26: 'Z'
-        };
+<div id="popup">
+    <h2>Test Results</h2>
+    <table border="1" style="margin: 0 auto;">
+        <tr>
+            <th>Correct</th>
+            <th>Incorrect</th>
+        </tr>
+        <tr>
+            <td id="correctCount">0</td>
+            <td id="incorrectCount">0</td>
+        </tr>
+    </table>
+    <button id="downloadBtn">Download Results</button>
+    <br><br>
+    <button onclick="window.location.href = 'home.html';">Go to Home Page</button>
+    <button onclick="window.location.href = 'userdetail.html';">Next Test</button>
+</div>
 
-        function nextRound() {
-            if (attempts < totalRounds) {
-                attempts++;
-                currentRandomNumber = Math.floor(Math.random() * 26) + 1;
-                document.getElementById('currentNumber').textContent =currentRandomNumber;
-                document.getElementById('inputField').value = ''; // Reset input field
-                document.getElementById('inputField').focus(); // Focus on the input field
-                startTimer();
+<!-- Click Sound -->
+<audio id="clickSound">
+    <source src="https://www.soundjay.com/button/sounds/button-16.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    const colors = ['green', 'red', 'yellow', 'violet', 'blue', 'orange'];
+    let scoreCorrect = 0;
+    let scoreIncorrect = 0;
+    let totalTime = 60;
+    let timerInterval;
+    let currentColor;
+    let gameStarted = false;
+    let voiceInterval;
+    let synth = window.speechSynthesis;
+
+    const startButton = document.getElementById('startButton');
+    const grid = document.getElementById('grid');
+    const popup = document.getElementById('popup');
+    const timer = document.getElementById('timer');
+    const correctCount = document.getElementById('correctCount');
+    const incorrectCount = document.getElementById('incorrectCount');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const clickSound = document.getElementById('clickSound');
+
+    // Start game when the button is pressed
+    startButton.addEventListener('click', () => {
+        startButton.style.display = 'none';  // Hide the start button
+        grid.style.display = 'grid';  // Show the grid
+        startGame();
+    });
+
+    function startGame() {
+        gameStarted = true;
+
+        // Start timer
+        timerInterval = setInterval(() => {
+            totalTime--;
+            timer.innerText = `Time left: ${totalTime}s`;
+            if (totalTime === 0) {
+                clearInterval(timerInterval);
+                endGame();
+            }
+        }, 1000);
+
+        // Play random color every 2 seconds
+        voiceInterval = setInterval(playRandomColor, 2000);
+    }
+
+    // Function to play a random color sound
+    function playRandomColor() {
+        currentColor = colors[Math.floor(Math.random() * colors.length)];
+        const utterance = new SpeechSynthesisUtterance(currentColor);
+        synth.speak(utterance);
+    }
+
+    // Function to check the clicked color
+    document.querySelectorAll('.color-box').forEach(box => {
+        box.addEventListener('click', (e) => {
+            if (!gameStarted) return;
+
+            // Play click sound
+            clickSound.play();
+
+            const clickedColor = e.target.id;
+            if (clickedColor === currentColor) {
+                scoreCorrect++;
             } else {
-                showResults();
+                scoreIncorrect++;
             }
-        }
-
-        function startTest() {
-            correctAnswers = 0;
-            attempts = 0;
-            results.length = 0; // Reset results array
-            document.getElementById('resultTable').classList.add('hidden'); // Hide results table
-            document.getElementById('downloadBtn').classList.add('hidden'); // Hide download button
-            document.getElementById('goToTest3Btn').classList.add('hidden'); // Hide "Go to Test 3" button
-            document.getElementById('currentNumber').textContent = "Watch Here Carefully"; // Reset current number
-            nextRound();
-        }
-
-        function startTimer() {
-            timeLeft = 10; // Reset timer to 10 seconds
-            document.getElementById('timer').textContent = "00:" + (timeLeft < 10 ? '0' : '') + timeLeft;
-            clearInterval(timer); // Clear any previous interval
-            timer = setInterval(countdown, 1000); // Start countdown
-        }
-
-        function countdown() {
-            timeLeft--;
-            document.getElementById('timer').textContent = "00:" + (timeLeft < 10 ? '0' : '') + timeLeft;
-
-            if (timeLeft <= 0) {
-                clearInterval(timer); // Stop timer at 0
-                checkAnswer(); // Auto-check if the user hasn't submitted
-            }
-        }
-
-        document.getElementById('inputField').addEventListener('input', function() {
-            checkAnswer(); // Automatically check answer on key press
         });
+    });
 
-        function checkAnswer() {
-            const userAnswer = document.getElementById('inputField').value.toUpperCase();
-            const correctAnswer = alphabetMap[currentRandomNumber];
-            let resultText = userAnswer === correctAnswer ? 'Correct' : `Wrong (Correct: ${correctAnswer})`;
+    // Function to end the game
+    function endGame() {
+        gameStarted = false;
+        grid.style.display = 'none';  // Hide the grid
+        popup.style.display = 'block';  // Show the results popup
 
-            // Store result for this round
-            results.push({
-                round: attempts,
-                correctAnswer,
-                userAnswer,
-                result: resultText
-            });
+        // Stop the color announcement
+        clearInterval(voiceInterval);
+        synth.cancel();  // Immediately stop any ongoing speech
 
-            nextRound();
-        }
+        // Update the results table
+        correctCount.innerText = scoreCorrect;
+        incorrectCount.innerText = scoreIncorrect;
 
-        function showResults() {
-            const resultTable = document.getElementById('resultTable');
-            const resultBody = document.getElementById('resultBody');
-            resultBody.innerHTML = ''; // Clear previous results
-
-            // Populate table with new results
-            results.forEach(result => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${result.round}</td>
-                    <td>${result.correctAnswer}</td>
-                    <td>${result.userAnswer}</td>
-                    <td>${result.result}</td>
-                `;
-                resultBody.appendChild(row);
-            });
-
-            resultTable.classList.remove('hidden'); // Show results table
-            document.getElementById('downloadBtn').classList.remove('hidden'); // Show download button
-            document.getElementById('goToTest3Btn').classList.remove('hidden'); // Show "Go to Test 3" button
-        }
-
-        function downloadResults() {
-            let csvContent = "data:text/csv;charset=utf-8,Round,Correct Answer,Your Answer,Result\n";
-
-            // Add each result to the CSV content
-            results.forEach(result => {
-                const row = `${result.round},${result.correctAnswer},${result.userAnswer},${result.result}\n`;
-                csvContent += row;
-            });
-
-            // Create a download link
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "alphabet_test_results.txt");
-
-            // Trigger download
-            link.click();
-        }
-
-        function goToNextTest() {
-            // Redirect to Test 3 (replace with actual URL or function)
-            window.location.href = "index3.html"; // Change this to your Test 3 page
-        }
-    </script>
+        // Download results as .txt file
+        downloadBtn.addEventListener('click', () => {
+            const resultText = `Test Results:\nCorrect: ${scoreCorrect}\nIncorrect: ${scoreIncorrect}`;
+            const blob = new Blob([resultText], { type: 'text/plain' });
+            const downloadLink = document.createElement('a');
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = 'Test3_results.txt';
+            downloadLink.click();
+        });
+    }
+</script>
 
 </body>
 </html>
