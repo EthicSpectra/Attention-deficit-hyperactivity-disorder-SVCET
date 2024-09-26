@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Medical Test - Login</title>
+  <title>Doctor Login</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -24,7 +24,6 @@
       text-align: center;
       box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
       width: 320px;
-      backdrop-filter: blur(10px);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
@@ -86,32 +85,39 @@
 </head>
 <body>
   <div class="login-container">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Username">
+    <h2>Doctor Login</h2>
+    <input type="text" id="fullname" placeholder="Full Name">
+    <input type="email" id="gmail" placeholder="Gmail">
+    <input type="text" id="position" placeholder="Position in Hospital">
+    <input type="date" id="dob" placeholder="Date of Birth">
     <input type="password" id="password" placeholder="Password">
-    <button onclick="login()">Login</button>
+    <input type="password" id="confirmPassword" placeholder="Re-enter Password">
+    <button onclick="validateForm()">Next</button>
   </div>
 
   <script>
-    function login() {
-      var username = document.getElementById("username").value;
+    function validateForm() {
+      var fullname = document.getElementById("fullname").value;
+      var gmail = document.getElementById("gmail").value;
+      var position = document.getElementById("position").value;
+      var dob = document.getElementById("dob").value;
       var password = document.getElementById("password").value;
+      var confirmPassword = document.getElementById("confirmPassword").value;
 
-      // List of valid usernames and passwords
-      const validUsers = {
-        "admin": "password",
-        "admin": "adminpass",
-        "vasanth": "vasanth"
-      };
-
-      // Check if the entered username exists and the password matches
-      if (username in validUsers && validUsers[username] === password) {
-        // Redirect to next page if valid
-        window.location.href = "./index2.html";
-      } else {
-        // Show alert if credentials are incorrect
-        alert("Invalid username or password. Please try again.");
+      // Basic validation
+      if (fullname === "" || gmail === "" || position === "" || dob === "" || password === "" || confirmPassword === "") {
+        alert("Please fill in all fields.");
+        return;
       }
+
+      // Check if passwords match
+      if (password !== confirmPassword) {
+        alert("Passwords do not match. Please try again.");
+        return;
+      }
+
+      // Redirect to next page if valid
+      window.location.href = "./home.html";
     }
   </script>
 </body>
