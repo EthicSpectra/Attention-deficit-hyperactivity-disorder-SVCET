@@ -10,7 +10,7 @@
         $count = mysqli_num_rows($result);  
         
         if($count == 1){  
-            header("Location: home.html");
+            header("Location: index2.html");
         }  
         else{  
             echo  '<script>

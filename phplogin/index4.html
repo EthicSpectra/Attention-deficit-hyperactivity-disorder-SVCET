@@ -124,6 +124,7 @@
     let currentColor;
     let gameStarted = false;
     let voiceInterval;
+    let colorShuffleInterval;
     let synth = window.speechSynthesis;
 
     const startButton = document.getElementById('startButton');
@@ -155,8 +156,24 @@
             }
         }, 1000);
 
+        // Shuffle colors every 2 seconds
+        colorShuffleInterval = setInterval(shuffleColors, 2000);
+
         // Play random color every 2 seconds
         voiceInterval = setInterval(playRandomColor, 2000);
+    }
+
+    // Function to shuffle the colors and update the boxes
+    function shuffleColors() {
+        // Shuffle the colors array
+        const shuffledColors = colors.sort(() => Math.random() - 0.5);
+
+        // Get all color-box elements and apply the shuffled colors
+        const colorBoxes = document.querySelectorAll('.color-box');
+        colorBoxes.forEach((box, index) => {
+            box.style.backgroundColor = shuffledColors[index];
+            box.id = shuffledColors[index]; // Update the id to match the new color
+        });
     }
 
     // Function to play a random color sound
@@ -184,29 +201,49 @@
     });
 
     // Function to end the game
-    function endGame() {
-        gameStarted = false;
-        grid.style.display = 'none';  // Hide the grid
-        popup.style.display = 'block';  // Show the results popup
+    // Function to end the game and send results to the server
+function endGame() {
+    gameStarted = false;
+    grid.style.display = 'none';  // Hide the grid
+    popup.style.display = 'block';  // Show the results popup
 
-        // Stop the color announcement
-        clearInterval(voiceInterval);
-        synth.cancel();  // Immediately stop any ongoing speech
+    // Stop the color announcement and shuffling
+    clearInterval(voiceInterval);
+    clearInterval(colorShuffleInterval);
+    synth.cancel();  // Immediately stop any ongoing speech
 
-        // Update the results table
-        correctCount.innerText = scoreCorrect;
-        incorrectCount.innerText = scoreIncorrect;
+    // Update the results table
+    correctCount.innerText = scoreCorrect;
+    incorrectCount.innerText = scoreIncorrect;
 
-        // Download results as .txt file
-        downloadBtn.addEventListener('click', () => {
-            const resultText = `Test Results:\nCorrect: ${scoreCorrect}\nIncorrect: ${scoreIncorrect}`;
-            const blob = new Blob([resultText], { type: 'text/plain' });
-            const downloadLink = document.createElement('a');
-            downloadLink.href = URL.createObjectURL(blob);
-            downloadLink.download = 'Test3_results.txt';
-            downloadLink.click();
-        });
+    // Send results to the server
+    sendResultsToServer(scoreCorrect, scoreIncorrect);
+}
+
+// Function to send test results to the server using AJAX
+function sendResultsToServer(correct, incorrect) {
+    const personNumber = prompt("Enter your person number:", "1");
+
+    if (personNumber != null) {
+        const formData = new FormData();
+        formData.append('person', personNumber);
+        formData.append('correct', correct);
+        formData.append('incorrect', incorrect);
+
+        // Send the data to the PHP script via AJAX
+        fetch('save_to_excel.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert("Results saved to Excel.");
+        })
+        .catch(error => console.error('Error:', error));
     }
+}
+
+
 </script>
 
 </body>

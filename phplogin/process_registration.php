@@ -14,9 +14,6 @@ if (isset($_POST['register'])) {
         exit;
     }
 
-    // Hash the password for security
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
     // Check if the username already exists in the login table
     $check_username = "SELECT * FROM login WHERE username='$username' LIMIT 1";
     $result = $conn->query($check_username);
@@ -26,12 +23,12 @@ if (isset($_POST['register'])) {
         exit;
     }
 
-    // Insert the user into the login table
-    $sql = "INSERT INTO login (username, password) VALUES ('$username', '$hashed_password')";
+    // Insert the user into the login table with plain text password
+    $sql = "INSERT INTO login (username, password) VALUES ('$username', '$password')";
 
     if ($conn->query($sql) === TRUE) {
         echo "Registration successful!";
-        header("Location:home.html"); // Redirect to login page after successful registration
+        header("Location:home.html"); // Redirect to home page after successful registration
         exit;
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;

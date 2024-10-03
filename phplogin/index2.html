@@ -90,6 +90,7 @@
   <script>
     const testLetters = "pbdqr";
     const totalInputs = 200;
+    let letterList = [];
     let currentInput = 0;
     let correctInputs = 0;
     let wrongInputs = 0;
@@ -100,13 +101,54 @@
     function startTest() {
       document.querySelector('.start-container').style.display = 'none';
       document.getElementById('testContainer').style.display = 'block';
+      generateRandomLetterDistribution();
       nextLetter();
       startTimer();
     }
 
+    // Function to generate random proportions and distribute letters
+    function generateRandomLetterDistribution() {
+      const proportions = getRandomProportions(testLetters.length, totalInputs);
+      letterList = [];
+
+      for (let i = 0; i < testLetters.length; i++) {
+        for (let j = 0; j < proportions[i]; j++) {
+          letterList.push(testLetters[i]);
+        }
+      }
+
+      // Shuffle the letterList to randomize the order
+      letterList = shuffleArray(letterList);
+    }
+
+    // Function to get random proportions for letter distribution
+    function getRandomProportions(numLetters, total) {
+      let proportions = [];
+      let sum = 0;
+
+      // Generate random numbers
+      for (let i = 0; i < numLetters - 1; i++) {
+        const rand = Math.floor(Math.random() * (total - sum - (numLetters - i - 1))) + 1;
+        proportions.push(rand);
+        sum += rand;
+      }
+      proportions.push(total - sum); // The last proportion to make the sum equal to total
+
+      return proportions;
+    }
+
+    // Fisher-Yates shuffle algorithm to shuffle the array
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
     function nextLetter() {
       if (currentInput < totalInputs) {
-        const randomLetter = testLetters[Math.floor(Math.random() * testLetters.length)];
+        const randomLetter = letterList[currentInput];
         document.getElementById('letterDisplay').innerText = randomLetter;
         document.getElementById('letterInput').value = '';
         document.getElementById('letterInput').focus();
@@ -124,7 +166,7 @@
         if (currentInput % 50 === 0) {
           startBreak();
         } else {
-          setTimeout(nextLetter, 2000); // Change to 500 milliseconds (0.5 seconds)
+          setTimeout(nextLetter, 1000);
         }
       } else {
         clearInterval(timerInterval);
