@@ -1,14 +1,9 @@
-<?php 
-include("connection.php"); 
-include("login.php"); 
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Medical Test - Login</title>
+  <title>Doctor Login</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -29,7 +24,6 @@ include("login.php");
       text-align: center;
       box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
       width: 320px;
-      backdrop-filter: blur(10px);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
@@ -91,32 +85,14 @@ include("login.php");
 </head>
 <body>
   <div class="login-container">
-    <h2>Login</h2>
-    <!-- Form for login submission -->
-    <form name="form" action="login.php" onsubmit="return isvalid()" method="POST">
-      <input type="text" id="username" name="user" placeholder="Username">
-      <input type="password" id="password" name="pass" placeholder="Password">
-      <button type="submit" id="btn" name="submit">Login</button>
+    <h2>Doctor Registration</h2>
+    <form action="process_registration.php" method="POST">
+      <input type="text" id="username" name="username" placeholder="Username" required>
+      <input type="password" id="password" name="password" placeholder="Password" required>
+      <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter Password" required>
+      <button type="submit" name="register">Register</button>
     </form>
   </div>
-
-  <script>
-    function isvalid() {
-      var user = document.getElementById("username").value;
-      var pass = document.getElementById("password").value;
-
-      if (user.length === "" && pass.length === "") {
-        alert("Username and password fields are empty!");
-        return false;
-      } else if (user.length === "") {
-        alert("Username field is empty!");
-        return false;
-      } else if (pass.length === "") {
-        alert("Password field is empty!");
-        return false;
-      }
-      return true;
-    }
-  </script>
+  
 </body>
 </html>

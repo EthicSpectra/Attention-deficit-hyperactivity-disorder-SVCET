@@ -31,7 +31,7 @@ if (isset($_POST['register'])) {
 
     if ($conn->query($sql) === TRUE) {
         echo "Registration successful!";
-        header("Location:home.html"); // Redirect to login page after successful registration
+        header("Location: home.html"); // Redirect to login page after successful registration
         exit;
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;

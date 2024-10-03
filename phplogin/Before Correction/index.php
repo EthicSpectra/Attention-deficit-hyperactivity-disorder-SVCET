@@ -1,4 +1,5 @@
 <?php 
+// Include connection.php for database connection and login.php for validation
 include("connection.php"); 
 include("login.php"); 
 ?>
