@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letter Test</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="timer" class="neon">05:00</div>
+        <div id="letterBox" class="neon">P</div>
+        <input type="text" id="inputBox" autofocus class="input-box" oninput="checkInput()" maxlength="1">
+        <div id="stats" class="stats">
+            <p>Letter: <span id="letterCount">0</span></p>
+            <p>Correct: <span id="correctCount">0</span></p>
+            <p>Incorrect: <span id="wrongCount">0</span></p>
+        </div>
+        <button id="startButton" class="neon" onclick="startTest()">Start Test</button>
+        <button id="downloadButton" class="neon" onclick="downloadResults()" style="display:none;">Download Results</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

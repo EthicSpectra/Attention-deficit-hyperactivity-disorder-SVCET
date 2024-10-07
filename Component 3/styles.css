@@ -1,0 +1,53 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #000;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    text-align: center;
+}
+
+.neon {
+    color: #39FF14;
+    text-shadow: 0 0 5px #39FF14, 0 0 10px #39FF14, 0 0 20px #39FF14, 0 0 30px #39FF14;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+#letterBox {
+    font-size: 5rem;
+}
+
+.input-box {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+    width: 100px;
+    padding: 10px;
+}
+
+button {
+    background-color: #000;
+    color: #39FF14;
+    border: 2px solid #39FF14;
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #39FF14;
+    color: #000;
+}
+
+.stats p {
+    color: white;
+    font-size: 1.5rem;
+}
