@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Letter Input Test</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">Letter Input Test</h1>
+    <p class="instructions">Type the letter displayed in the center of the screen. Press "Enter" to submit your answer.</p>
+
+    <div id="results-card" class="results-card">
+      <h2>Real-time Results</h2>
+      <div id="real-time-results">
+        <p>Letter P - Shown: 0, Correct: 0, Wrong: 0</p>
+        <p>Letter B - Shown: 0, Correct: 0, Wrong: 0</p>
+        <p>Letter D - Shown: 0, Correct: 0, Wrong: 0</p>
+        <p>Letter Q - Shown: 0, Correct: 0, Wrong: 0</p>
+        <p>Letter R - Shown: 0, Correct: 0, Wrong: 0</p>
+      </div>
+      <button id="download-button" onclick="downloadResults()">Download Results</button>
+    </div>
+
+    <div class="occurrence-card" id="occurrence-card">
+      <p id="timer" class="timer">Time: 5:00</p>
+      <p id="letter-display" class="letter-display">P</p>
+    </div>
+
+    <div class="input-container">
+      <input type="text" id="input-field" class="input-field" autofocus>
+      <button id="start-button" onclick="startTest()">Start Test</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

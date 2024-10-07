@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Letter Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #timer, #letter-display {
+      font-size: 2em;
+      margin: 20px;
+      display: none;
+    }
+    #start-button {
+      padding: 10px 20px;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+    #input-field {
+      margin-top: 20px;
+      display: none;
+    }
+    #results {
+      display: none;
+    }
+    #results p {
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <button id="start-button">Start Test</button>
+  <div id="timer">Time: 5:00</div>
+  <div id="letter-display">-</div>
+  <input type="text" id="input-field" placeholder="Type letter here" autocomplete="on" />
+  <div id="results">
+    <p id="correct-count">Correct: 0</p>
+    <p id="wrong-count">Wrong: 0</p>
+    <button onclick="downloadResults()">Download Results</button>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
