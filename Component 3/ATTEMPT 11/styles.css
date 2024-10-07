@@ -1,0 +1,62 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: white;
+}
+
+.container {
+    text-align: center;
+}
+
+h1.neon-text {
+    font-size: 3rem;
+    color: #fff;
+    text-shadow: 0 0 20px #0ff, 0 0 30px #0ff, 0 0 40px #0ff, 0 0 50px #0ff;
+}
+
+#timer {
+    font-size: 2.5rem;
+    margin: 20px;
+}
+
+.neon-box {
+    font-size: 4rem;
+    color: #ff00ff;
+    text-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff;
+    margin: 20px;
+}
+
+#user-input {
+    font-size: 2rem;
+    padding: 10px;
+    margin: 20px;
+    border: none;
+    border-radius: 5px;
+    width: 50px;
+    text-align: center;
+}
+
+#start-button {
+    background-color: #0ff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #000;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+#results {
+    margin-top: 20px;
+    font-size: 1.5rem;
+}

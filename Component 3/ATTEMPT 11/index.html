@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Research Test</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="neon-text">Medical Research Test</h1>
+        <div id="timer">45:00</div>
+        <div id="letter-box" class="neon-box"></div>
+        <input type="text" id="user-input" autofocus maxlength="1" autocomplete="off">
+        <button id="start-button" onclick="startTest()">Start</button>
+
+        <div id="results">
+            <p>Total Inputs: <span id="input-count">0</span></p>
+            <p>Correct: <span id="correct-count">0</span></p>
+            <p>Wrong: <span id="wrong-count">0</span></p>
+            <p>Unattended "P": <span id="unattended-p-count">0</span></p>
+        </div>
+
+        <!-- Real-Time Monitoring Section -->
+        <div id="monitoring-screen" class="monitoring-screen">
+            <h2>Real-Time Monitoring</h2>
+            <p>Current Letter: <span id="monitor-current-letter"></span></p>
+            <p>Correct Entries: <span id="monitor-correct">0</span></p>
+            <p>Wrong Entries: <span id="monitor-wrong">0</span></p>
+            <p>Unattended "P": <span id="monitor-unattended-p">0</span></p>
+            <p>Remaining 'P' Letters: <span id="monitor-p-count">40</span></p>
+            <p>Inputs Remaining: <span id="monitor-input-remaining">40</span></p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
