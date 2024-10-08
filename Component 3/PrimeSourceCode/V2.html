@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letter Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #282c34;
+            color: white;
+        }
+        #letter-box {
+            font-size: 48px;
+            margin: 20px;
+        }
+        #timer {
+            font-size: 36px;
+        }
+        #input-box {
+            font-size: 24px;
+            padding: 10px;
+        }
+        #start-btn, #next-page-btn, #download-btn {
+            padding: 10px 20px;
+            font-size: 20px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        #next-page-btn, #download-btn {
+            display: none; /* Hide initially */
+        }
+        #p-stats {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #log {
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            width: 300px;
+        }
+        .log-entry {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div id="p-stats">
+        <p>Unique Test ID: <span id="test-id"></span></p>
+        <p>Number of times 'P' appeared: <span id="p-count">0</span></p>
+        <p>Correct 'P' inputs: <span id="p-correct">0</span></p>
+        <p>Missed 'P' inputs: <span id="p-missed">0</span></p>
+        <p>Wrong keys pressed: <span id="wrong-keys">0</span></p>
+    </div>
+    <div id="timer">45</div>
+    <div id="letter-box">Letter will appear here</div>
+    <input id="input-box" type="text" disabled>
+    <button id="start-btn">Start Test</button>
+    <button id="next-page-btn" onclick="window.location.href='nextPage.html'">Go to Next Page</button>
+    <button id="download-btn" onclick="downloadResults()">Download Results</button>
+
+    <!-- Log Section -->
+    <div id="log"></div>
+
+    <!-- Submit Form -->
+    <form id="submit-form" onsubmit="submitResultsToGoogleForm(); return false;">
+        <button type="submit">Submit Results</button>
+    </form>
+
+    <script>
+        let timeLeft = 45;
+        let inputCount = 0; // Track the number of inputs
+        const maxInputs = 40; // Maximum allowed inputs
+        const letters = ['P', 'B', 'D', 'Q', 'R'];
+        let lastLetter = '';
+        let pAppeared = 0; // Track how many times 'P' appears
+        let pCorrect = 0; // Track how many times 'P' was correctly input by the user
+        let pMissed = 0; // Track how many times 'P' was missed or incorrectly input
+        let wrongKeyCount = 0; // Track how many wrong keys are pressed
+        let currentLetter = ''; // Track the current letter displayed
+        const letterChangeInterval = 1125; // Fixed interval for letter changes (in milliseconds)
+        let countdown;
+        let letterChange; // For letter interval
+        let nextPageButtonVisible = false; // Flag to track if the next page button is visible
+        let testID; // To hold the unique test ID
+
+        // HTML elements
+        let timerElement = document.getElementById('timer');
+        let letterBox = document.getElementById('letter-box');
+        let inputBox = document.getElementById('input-box');
+        let pStatsElement = document.getElementById('p-stats');
+        let startBtn = document.getElementById('start-btn');
+        let nextPageBtn = document.getElementById('next-page-btn');
+        let downloadBtn = document.getElementById('download-btn');
+        let logElement = document.getElementById('log'); // Log display element
+
+        // Function to add log messages to the log element
+        function logMessage(message) {
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            logEntry.innerText = message;
+            logElement.appendChild(logEntry);
+            logElement.scrollTop = logElement.scrollHeight; // Scroll to the bottom
+        }
+
+        // Function to start the test
+        function startTest() {
+            startBtn.style.display = 'none'; // Hide the start button
+            inputBox.disabled = false; // Enable input
+            inputBox.focus(); // Auto-focus input box
+
+            // Generate a unique test ID
+            testID = 'ID-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+            document.getElementById('test-id').innerText = testID;
+            logMessage(`Test started with ID: ${testID}`);
+
+            // Start countdown
+            countdown = setInterval(() => {
+                if (timeLeft <= 0 || inputCount >= maxInputs) {
+                    clearInterval(countdown);
+                    clearInterval(letterChange);
+                    inputBox.disabled = true; // Disable input after time's up or inputs complete
+                    logMessage('Time is up or max inputs reached. Submitting results...');
+                    submitResultsToGoogleForm(); // Submit results to Google Form
+                    showNextPageButton(); // Show button to go to next page
+                    downloadBtn.style.display = 'block'; // Show the download button
+                } else {
+                    timerElement.textContent = timeLeft;
+                    timeLeft--;
+                }
+            }, 1000);
+
+            // Start showing letters
+            letterChange = setInterval(() => {
+                if (timeLeft > 0 && inputCount < maxInputs) {
+                    letterBox.textContent = getNextLetter();
+                }
+            }, letterChangeInterval);
+        }
+
+        // Function to get the next letter
+        function getNextLetter() {
+            let newLetter;
+
+            if (pAppeared < 40) {
+                // Ensure 'P' is shown
+                if (lastLetter !== 'P') {
+                    newLetter = 'P';
+                    pAppeared++; // Increment 'P' appearance count
+                    logMessage(`'P' appeared. Total count: ${pAppeared}`);
+                } else {
+                    do {
+                        newLetter = letters[Math.floor(Math.random() * letters.length)];
+                    } while (newLetter === lastLetter || newLetter === 'P');
+                }
+            } else {
+                // Once 'P' is shown 40 times, use random letters
+                do {
+                    newLetter = letters[Math.floor(Math.random() * letters.length)];
+                } while (newLetter === lastLetter);
+            }
+
+            // Update the last letter
+            lastLetter = newLetter;
+            currentLetter = newLetter; // Keep track of the current letter
+            updatePStats(); // Update the real-time tracking window
+            return newLetter;
+        }
+
+        // Input event listener (capture on keystroke)
+        inputBox.addEventListener('input', (event) => {
+            if (inputCount < maxInputs && timeLeft > 0) {
+                const userInput = event.target.value.toUpperCase();
+
+                if (userInput === currentLetter) {
+                    if (currentLetter === 'P') {
+                        pCorrect++; // Increment correct 'P' input count
+                        logMessage(`Correct input for 'P'. Total correct: ${pCorrect}`);
+                    }
+                } else {
+                    if (currentLetter === 'P') {
+                        pMissed++; // Increment missed 'P' count
+                        logMessage(`Missed 'P'. Total missed: ${pMissed}`);
+                    } else {
+                        wrongKeyCount++; // Increment wrong keys pressed
+                        logMessage(`Wrong key pressed: ${userInput}. Total wrong keys: ${wrongKeyCount}`);
+                    }
+                }
+
+                inputCount++; // Increment input count
+                event.target.value = ''; // Clear the input field
+                updatePStats(); // Update the real-time tracking window
+            }
+        });
+
+        // Function to update the statistics display
+        function updatePStats() {
+            document.getElementById('p-count').innerText = pAppeared;
+            document.getElementById('p-correct').innerText = pCorrect;
+            document.getElementById('p-missed').innerText = pMissed;
+            document.getElementById('wrong-keys').innerText = wrongKeyCount;
+        }
+
+        // Show next page button
+        function showNextPageButton() {
+            nextPageBtn.style.display = 'block'; // Show the next page button
+        }
+
+        // Function to submit results to Google Form
+        // Function to submit results to Google Form
+function submitResultsToGoogleForm() {
+    const formURL = 'https://docs.google.com/forms/d/e/1FAIpQLScRYDwHC4-w5ASMk4UqmYz8TH6jWRIwuvLJ-zF5WTcosEAsGg/viewform?usp=sf_link'; // Replace with your Google Form URL
+    const data = {
+        'entry.366340186': testID, // Replace with the actual entry ID for Unique Test ID
+        'entry.1502334890': pAppeared, // Replace with the actual entry ID for 'P' appeared count
+        'entry.911376892': pCorrect, // Replace with the actual entry ID for correct inputs
+        'entry.1018384930': pMissed, // Replace with the actual entry ID for missed inputs
+        'entry.218342853': wrongKeyCount // Replace with the actual entry ID for wrong keys
+    };
+
+    const params = new URLSearchParams(data).toString();
+
+    // Log the data being sent
+    console.log('Submitting to Google Form with data:', data);
+
+    fetch(formURL, {
+        method: 'POST',
+        body: params,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.text(); // Get response text for debugging
+    })
+    .then(responseText => {
+        console.log('Response from Google Form:', responseText); // Log the response text
+        alert("Results submitted successfully!");
+        logMessage('Results submitted to Google Form successfully.');
+    })
+    .catch((error) => {
+        console.error('Error submitting results to Google Form:', error);
+        logMessage(`Error submitting results: ${error}`);
+    });
+}
+
+
+        // Function to download results
+        function downloadResults() {
+            const wb = XLSX.utils.book_new();
+            const wsData = [
+                ['Unique Test ID', 'P Appeared', 'Correct Inputs', 'Missed Inputs', 'Wrong Keys'],
+                [testID, pAppeared, pCorrect, pMissed, wrongKeyCount],
+            ];
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+            XLSX.utils.book_append_sheet(wb, ws, 'Results');
+            XLSX.writeFile(wb, 'test_results.xlsx');
+            logMessage('Results downloaded as Excel file.');
+        }
+
+        // Event listener for the start button
+        startBtn.addEventListener('click', startTest);
+    </script>
+</body>
+</html>
