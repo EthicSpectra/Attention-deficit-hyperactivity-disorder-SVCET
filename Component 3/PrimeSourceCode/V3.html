@@ -44,19 +44,6 @@
             padding: 10px;
             border-radius: 5px;
         }
-        #log {
-            margin-top: 20px;
-            max-height: 200px;
-            overflow-y: auto;
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 10px;
-            border-radius: 5px;
-            width: 300px;
-        }
-        .log-entry {
-            margin: 5px 0;
-            font-size: 14px;
-        }
     </style>
 </head>
 <body>
@@ -72,14 +59,11 @@
     <input id="input-box" type="text" disabled>
     <button id="start-btn">Start Test</button>
     <button id="next-page-btn" onclick="window.location.href='nextPage.html'">Go to Next Page</button>
-    <button id="download-btn" onclick="downloadResults()">Download Results</button>
-
-    <!-- Log Section -->
-    <div id="log"></div>
+    <!-- <button id="download-btn" onclick="downloadResults()">Download Results</button> -->
 
     <!-- Submit Form -->
     <form id="submit-form" onsubmit="submitResultsToGoogleForm(); return false;">
-        <button type="submit">Submit Results</button>
+        <!-- <button type="submit">Submit Results</button> -->
     </form>
 
     <script>
@@ -107,16 +91,6 @@
         let startBtn = document.getElementById('start-btn');
         let nextPageBtn = document.getElementById('next-page-btn');
         let downloadBtn = document.getElementById('download-btn');
-        let logElement = document.getElementById('log'); // Log display element
-
-        // Function to add log messages to the log element
-        function logMessage(message) {
-            const logEntry = document.createElement('div');
-            logEntry.className = 'log-entry';
-            logEntry.innerText = message;
-            logElement.appendChild(logEntry);
-            logElement.scrollTop = logElement.scrollHeight; // Scroll to the bottom
-        }
 
         // Function to start the test
         function startTest() {
@@ -127,7 +101,6 @@
             // Generate a unique test ID
             testID = 'ID-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
             document.getElementById('test-id').innerText = testID;
-            logMessage(`Test started with ID: ${testID}`);
 
             // Start countdown
             countdown = setInterval(() => {
@@ -135,7 +108,6 @@
                     clearInterval(countdown);
                     clearInterval(letterChange);
                     inputBox.disabled = true; // Disable input after time's up or inputs complete
-                    logMessage('Time is up or max inputs reached. Submitting results...');
                     submitResultsToGoogleForm(); // Submit results to Google Form
                     showNextPageButton(); // Show button to go to next page
                     downloadBtn.style.display = 'block'; // Show the download button
@@ -162,7 +134,6 @@
                 if (lastLetter !== 'P') {
                     newLetter = 'P';
                     pAppeared++; // Increment 'P' appearance count
-                    logMessage(`'P' appeared. Total count: ${pAppeared}`);
                 } else {
                     do {
                         newLetter = letters[Math.floor(Math.random() * letters.length)];
@@ -190,15 +161,12 @@
                 if (userInput === currentLetter) {
                     if (currentLetter === 'P') {
                         pCorrect++; // Increment correct 'P' input count
-                        logMessage(`Correct input for 'P'. Total correct: ${pCorrect}`);
                     }
                 } else {
                     if (currentLetter === 'P') {
                         pMissed++; // Increment missed 'P' count
-                        logMessage(`Missed 'P'. Total missed: ${pMissed}`);
                     } else {
                         wrongKeyCount++; // Increment wrong keys pressed
-                        logMessage(`Wrong key pressed: ${userInput}. Total wrong keys: ${wrongKeyCount}`);
                     }
                 }
 
@@ -222,61 +190,32 @@
         }
 
         // Function to submit results to Google Form
-        // Function to submit results to Google Form
-function submitResultsToGoogleForm() {
-    const formURL = 'https://docs.google.com/forms/d/e/1FAIpQLScRYDwHC4-w5ASMk4UqmYz8TH6jWRIwuvLJ-zF5WTcosEAsGg/formResponse'; // Replace with your Google Form URL
-    const data = {
-        'entry.366340186': testID, // Replace with the actual entry ID for Unique Test ID
-        'entry.1502334890': pAppeared, // Replace with the actual entry ID for 'P' appeared count
-        'entry.911376892': pCorrect, // Replace with the actual entry ID for correct inputs
-        'entry.1018384930': pMissed, // Replace with the actual entry ID for missed inputs
-        'entry.218342853': wrongKeyCount // Replace with the actual entry ID for wrong keys
-    };
+        function submitResultsToGoogleForm() {
+            const formURL = 'https://docs.google.com/forms/d/e/1FAIpQLScRYDwHC4-w5ASMk4UqmYz8TH6jWRIwuvLJ-zF5WTcosEAsGg/formResponse'; // Google Form URL
+            const data = {
+                'entry.366340186': testID, // Unique Test ID
+                'entry.1502334890': pAppeared, // 'P' appeared count
+                'entry.606959625': pCorrect, // Correct 'P' inputs
+                'entry.843480235': pMissed, // Missed 'P' inputs
+                'entry.717468922': wrongKeyCount // Wrong keys pressed
+            };
+            alert("Submitted Successfully")
 
-    const params = new URLSearchParams(data).toString();
+            const params = new URLSearchParams(data).toString();
 
-    // Log the data being sent
-    console.log('Submitting to Google Form with data:', data);
-
-    fetch(formURL, {
-        method: 'POST',
-        body: params,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            fetch(formURL, {
+                method: 'POST',
+                body: params,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            });
         }
-        return response.text(); // Get response text for debugging
-    })
-    .then(responseText => {
-        console.log('Response from Google Form:', responseText); // Log the response text
-        alert("Results submitted successfully!");
-        logMessage('Results submitted to Google Form successfully.');
-    })
-    .catch((error) => {
-        console.error('Error submitting results to Google Form:', error);
-        logMessage(`Error submitting results: ${error}`);
-    });
-}
-
 
         // Function to download results
-        function downloadResults() {
-            const wb = XLSX.utils.book_new();
-            const wsData = [
-                ['Unique Test ID', 'P Appeared', 'Correct Inputs', 'Missed Inputs', 'Wrong Keys'],
-                [testID, pAppeared, pCorrect, pMissed, wrongKeyCount],
-            ];
-            const ws = XLSX.utils.aoa_to_sheet(wsData);
-            XLSX.utils.book_append_sheet(wb, ws, 'Results');
-            XLSX.writeFile(wb, 'test_results.xlsx');
-            logMessage('Results downloaded as Excel file.');
-        }
+        
 
-        // Event listener for the start button
+        // Start button event listener
         startBtn.addEventListener('click', startTest);
     </script>
 </body>
