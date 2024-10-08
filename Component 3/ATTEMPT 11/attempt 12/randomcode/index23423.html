@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letter Test</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #282c34;
+            color: white;
+        }
+        #letter-box {
+            font-size: 48px;
+            margin: 20px;
+        }
+        #timer {
+            font-size: 36px;
+        }
+        #input-box {
+            font-size: 24px;
+            padding: 10px;
+        }
+        #start-btn, #next-page-btn {
+            padding: 10px 20px;
+            font-size: 20px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        #next-page-btn {
+            display: none; /* Hide initially */
+        }
+        #p-stats {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="p-stats">
+        <p>Number of times 'P' appeared: <span id="p-count">0</span></p>
+        <p>Correct 'P' inputs: <span id="p-correct">0</span></p>
+        <p>Missed 'P' inputs: <span id="p-missed">0</span></p>
+        <p>Wrong keys pressed: <span id="wrong-keys">0</span></p>
+    </div>
+    <div id="timer">45</div>
+    <div id="letter-box">Letter will appear here</div>
+    <input id="input-box" type="text" disabled>
+    <button id="start-btn">Start Test</button>
+    <button id="next-page-btn" onclick="window.location.href='nextPage.html'">Go to Next Page</button>
+
+    <script>
+        let timeLeft = 45;
+        let inputCount = 0; // Track the number of inputs
+        const maxInputs = 40; // Maximum allowed inputs
+        const letters = ['P', 'B', 'D', 'Q', 'R'];
+        let lastLetter = '';
+        let pAppeared = 0; // Track how many times 'P' appears
+        let pCorrect = 0; // Track how many times 'P' was correctly input by the user
+        let pMissed = 0; // Track how many times 'P' was missed or incorrectly input
+        let wrongKeyCount = 0; // Track how many wrong keys are pressed
+        let currentLetter = ''; // Track the current letter displayed
+        const letterChangeInterval = 560; // Fixed interval for letter changes (in milliseconds)
+        let countdown;
+        let letterChange; // For letter interval
+        let nextPageButtonVisible = false; // Flag to track if the next page button is visible
+
+        // HTML elements
+        let timerElement = document.getElementById('timer');
+        let letterBox = document.getElementById('letter-box');
+        let inputBox = document.getElementById('input-box');
+        let pStatsElement = document.getElementById('p-stats');
+        let startBtn = document.getElementById('start-btn');
+        let nextPageBtn = document.getElementById('next-page-btn');
+
+        // Function to start the test
+        function startTest() {
+            startBtn.style.display = 'none'; // Hide the start button
+            inputBox.disabled = false; // Enable input
+            inputBox.focus(); // Auto-focus input box
+
+            // Start countdown
+            countdown = setInterval(() => {
+                if (timeLeft <= 0 || inputCount >= maxInputs) {
+                    clearInterval(countdown);
+                    clearInterval(letterChange);
+                    inputBox.disabled = true; // Disable input after time's up or inputs complete
+                    showNextPageButton(); // Show button to go to next page
+                } else {
+                    timerElement.textContent = timeLeft;
+                    timeLeft--;
+                }
+            }, 1000);
+
+            // Start showing letters
+            letterChange = setInterval(() => {
+                if (timeLeft > 0 && inputCount < maxInputs) {
+                    letterBox.textContent = getNextLetter();
+                }
+            }, letterChangeInterval);
+        }
+
+        // Function to get the next letter
+        function getNextLetter() {
+            let newLetter;
+            // Calculate how many letters we have shown so far
+            const totalLettersShown = pAppeared + (maxInputs - inputCount); // Max letters minus inputs
+            
+            // Determine if we can still show 'P'
+            if (pAppeared < 40) {
+                // Ensure 'P' is shown
+                if (lastLetter !== 'P') {
+                    newLetter = 'P';
+                    pAppeared++; // Increment 'P' appearance count
+                } else {
+                    do {
+                        newLetter = letters[Math.floor(Math.random() * letters.length)];
+                    } while (newLetter === lastLetter || newLetter === 'P');
+                }
+            } else {
+                // Once 'P' is shown 40 times, use random letters
+                do {
+                    newLetter = letters[Math.floor(Math.random() * letters.length)];
+                } while (newLetter === lastLetter);
+            }
+
+            // Update the last letter
+            lastLetter = newLetter;
+            currentLetter = newLetter; // Keep track of the current letter
+            updatePStats(); // Update the real-time tracking window
+            return newLetter;
+        }
+
+        // Input event listener (capture on keystroke)
+        inputBox.addEventListener('input', (event) => {
+            if (inputCount < maxInputs) {
+                const userInput = event.target.value.toUpperCase(); // Capture the user input
+                inputCount++; // Increment input count
+                inputBox.value = ''; // Clear the input after each keystroke
+
+                if (currentLetter === 'P') {
+                    if (userInput === 'P') {
+                        pCorrect++; // Increment correct 'P' input
+                    } else {
+                        pMissed++; // Increment missed 'P' input
+                        wrongKeyCount++; // Increment wrong key count if input is not 'P'
+                    }
+                } else if (userInput !== currentLetter) {
+                    wrongKeyCount++; // Increment wrong key count for any incorrect input
+                }
+
+                updatePStats(); // Update the real-time tracking window
+            }
+
+            // Check if maximum inputs are reached
+            if (inputCount >= maxInputs) {
+                inputBox.disabled = true; // Disable input
+                clearInterval(countdown); // Stop the timer
+                clearInterval(letterChange); // Stop the letters from changing
+                showNextPageButton(); // Show the button to go to the next page
+            }
+        });
+
+        // Function to update real-time tracking stats
+        function updatePStats() {
+            document.getElementById('p-count').innerText = pAppeared;
+            document.getElementById('p-correct').innerText = pCorrect;
+            document.getElementById('p-missed').innerText = pMissed;
+            document.getElementById('wrong-keys').innerText = wrongKeyCount;
+        }
+
+        // Function to show the button to proceed to the next page
+        function showNextPageButton() {
+            if (!nextPageButtonVisible) {
+                nextPageBtn.style.display = 'block'; // Show the button
+                nextPageButtonVisible = true;
+            }
+        }
+
+        // Start button event listener
+        startBtn.addEventListener('click', startTest);
+    </script>
+</body>
+</html>
