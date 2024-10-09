@@ -58,12 +58,10 @@
     <div id="letter-box">Letter will appear here</div>
     <input id="input-box" type="text" disabled>
     <button id="start-btn">Start Test</button>
-    <button id="next-page-btn" onclick="window.location.href='nextPage.html'">Continue Test</button>
-    <!-- <button id="download-btn" onclick="downloadResults()">Download Results</button> -->
+    <button id="next-page-btn" onclick="window.location.href='Phase2.html'">Continue Test</button>
 
     <!-- Submit Form -->
     <form id="submit-form" onsubmit="submitResultsToGoogleForm(); return false;">
-        <!-- <button type="submit">Submit Results</button> -->
     </form>
 
     <script>
@@ -83,6 +81,16 @@
         let nextPageButtonVisible = false; // Flag to track if the next page button is visible
         let testID; // To hold the unique test ID
 
+        // Retrieve the test ID from localStorage
+        testID = localStorage.getItem('testID');
+
+        // If a test ID is found, display it
+        if (testID) {
+            document.getElementById('test-id').innerText = testID;
+        } else {
+            console.error("No test ID found.");
+        }
+
         // HTML elements
         let timerElement = document.getElementById('timer');
         let letterBox = document.getElementById('letter-box');
@@ -97,16 +105,13 @@
             startBtn.style.display = 'none'; // Hide the start button
             inputBox.disabled = false; // Enable input
             inputBox.focus(); // Auto-focus input box
-                // Retrieve the test ID from localStorage
-            const testID = localStorage.getItem('testID');
 
-                    // Display the test ID on the page
-                if (testID) {
-                    document.getElementById('test-id').textContent = testID;
-                } else {
-                 document.getElementById('test-id').textContent = 'Test ID not found!';
-                }
-         
+            // Generate a unique test ID
+            testID = 'ID-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+            document.getElementById('test-id').innerText = testID;
+
+            // Store the test ID in localStorage so it can be retrieved later
+            localStorage.setItem('testID', testID);
 
             // Start countdown
             countdown = setInterval(() => {
@@ -197,13 +202,13 @@
 
         // Function to submit results to Google Form
         function submitResultsToGoogleForm() {
-            const formURL = 'https://docs.google.com/forms/d/e/1FAIpQLScRYDwHC4-w5ASMk4UqmYz8TH6jWRIwuvLJ-zF5WTcosEAsGg/formResponse'; // Google Form URL
+            const formURL = 'https://docs.google.com/forms/d/e/1FAIpQLSe3LPtiiBOeowHxt_WX8Fv-Jluz-KYm8OZY6c77B4atR33WIQ/formResponse'; // Google Form URL
             const data = {
-                'entry.366340186': testID, // Unique Test ID
-                'entry.1502334890': bAppeared, // 'B' appeared count
-                'entry.606959625': bCorrect, // Correct 'B' inputs
-                'entry.843480235': bMissed, // Missed 'B' inputs
-                'entry.717468922': wrongKeyCount // Wrong keys pressed
+                'entry.1547329723': testID, // Unique Test ID
+                'entry.234930441': bAppeared, // 'B' appeared count
+                'entry.71736191': bCorrect, // Correct 'B' inputs
+                'entry.2134272409': bMissed, // Missed 'B' inputs
+                'entry.565893164': wrongKeyCount // Wrong keys pressed
             };
             alert("Submitted Successfully")
 
@@ -213,15 +218,18 @@
                 method: 'POST',
                 body: params,
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-            });
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    console.log('Results submitted successfully');
+                } else {
+                    console.error('Error submitting results:', response.statusText);
+                }
+            }).catch(error => console.error('Fetch error:', error));
         }
 
-        // Function to download results
-    
-
-        // Start button event listener
+        // Add event listener to start the test when the start button is clicked
         startBtn.addEventListener('click', startTest);
     </script>
 </body>
