@@ -37,7 +37,7 @@
         #next-page-btn, #download-btn {
             display: none; /* Hide initially */
         }
-        #p-stats {
+        #b-stats {
             position: absolute;
             top: 10px;
             left: 10px;
@@ -48,11 +48,11 @@
     </style>
 </head>
 <body>
-    <div id="p-stats">
+    <div id="b-stats">
         <p>Unique Test ID: <span id="test-id"></span></p>
-        <p>Number of times 'P' appeared: <span id="p-count">0</span></p>
-        <p>Correct 'P' inputs: <span id="p-correct">0</span></p>
-        <p>Missed 'P' inputs: <span id="p-missed">0</span></p>
+        <p>Number of times 'B' appeared: <span id="b-count">0</span></p>
+        <p>Correct 'B' inputs: <span id="b-correct">0</span></p>
+        <p>Missed 'B' inputs: <span id="b-missed">0</span></p>
         <p>Wrong keys pressed: <span id="wrong-keys">0</span></p>
     </div>
     <div id="timer">45</div>
@@ -73,9 +73,9 @@
         const maxInputs = 40; // Maximum allowed inputs
         const letters = ['P', 'B', 'D', 'Q', 'R'];
         let lastLetter = '';
-        let pAppeared = 0; // Track how many times 'P' appears
-        let pCorrect = 0; // Track how many times 'P' was correctly input by the user
-        let pMissed = 0; // Track how many times 'P' was missed or incorrectly input
+        let bAppeared = 0; // Track how many times 'B' appears
+        let bCorrect = 0; // Track how many times 'B' was correctly input by the user
+        let bMissed = 0; // Track how many times 'B' was missed or incorrectly input
         let wrongKeyCount = 0; // Track how many wrong keys are pressed
         let currentLetter = ''; // Track the current letter displayed
         const letterChangeInterval = 1125; // Fixed interval for letter changes (in milliseconds)
@@ -88,7 +88,7 @@
         let timerElement = document.getElementById('timer');
         let letterBox = document.getElementById('letter-box');
         let inputBox = document.getElementById('input-box');
-        let pStatsElement = document.getElementById('p-stats');
+        let bStatsElement = document.getElementById('b-stats');
         let startBtn = document.getElementById('start-btn');
         let nextPageBtn = document.getElementById('next-page-btn');
         let downloadBtn = document.getElementById('download-btn');
@@ -100,7 +100,6 @@
             inputBox.focus(); // Auto-focus input box
 
             // Generate a unique test ID
-            Math.seed = 12345;
             testID = 'ID-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
             document.getElementById('test-id').innerText = testID;
 
@@ -131,18 +130,18 @@
         function getNextLetter() {
             let newLetter;
 
-            if (pAppeared < 40) {
-                // Ensure 'P' is shown
-                if (lastLetter !== 'P') {
-                    newLetter = 'P';
-                    pAppeared++; // Increment 'P' appearance count
+            if (bAppeared < 40) {
+                // Ensure 'B' is shown
+                if (lastLetter !== 'B') {
+                    newLetter = 'B';
+                    bAppeared++; // Increment 'B' appearance count
                 } else {
                     do {
                         newLetter = letters[Math.floor(Math.random() * letters.length)];
-                    } while (newLetter === lastLetter || newLetter === 'P');
+                    } while (newLetter === lastLetter || newLetter === 'B');
                 }
             } else {
-                // Once 'P' is shown 40 times, use random letters
+                // Once 'B' is shown 40 times, use random letters
                 do {
                     newLetter = letters[Math.floor(Math.random() * letters.length)];
                 } while (newLetter === lastLetter);
@@ -151,7 +150,7 @@
             // Update the last letter
             lastLetter = newLetter;
             currentLetter = newLetter; // Keep track of the current letter
-            updatePStats(); // Update the real-time tracking window
+            updateBStats(); // Update the real-time tracking window
             return newLetter;
         }
 
@@ -161,12 +160,12 @@
                 const userInput = event.target.value.toUpperCase();
 
                 if (userInput === currentLetter) {
-                    if (currentLetter === 'P') {
-                        pCorrect++; // Increment correct 'P' input count
+                    if (currentLetter === 'B') {
+                        bCorrect++; // Increment correct 'B' input count
                     }
                 } else {
-                    if (currentLetter === 'P') {
-                        pMissed++; // Increment missed 'P' count
+                    if (currentLetter === 'B') {
+                        bMissed++; // Increment missed 'B' count
                     } else {
                         wrongKeyCount++; // Increment wrong keys pressed
                     }
@@ -174,15 +173,15 @@
 
                 inputCount++; // Increment input count
                 event.target.value = ''; // Clear the input field
-                updatePStats(); // Update the real-time tracking window
+                updateBStats(); // Update the real-time tracking window
             }
         });
 
         // Function to update the statistics display
-        function updatePStats() {
-            document.getElementById('p-count').innerText = pAppeared;
-            document.getElementById('p-correct').innerText = pCorrect;
-            document.getElementById('p-missed').innerText = pMissed;
+        function updateBStats() {
+            document.getElementById('b-count').innerText = bAppeared;
+            document.getElementById('b-correct').innerText = bCorrect;
+            document.getElementById('b-missed').innerText = bMissed;
             document.getElementById('wrong-keys').innerText = wrongKeyCount;
         }
 
@@ -196,9 +195,9 @@
             const formURL = 'https://docs.google.com/forms/d/e/1FAIpQLScRYDwHC4-w5ASMk4UqmYz8TH6jWRIwuvLJ-zF5WTcosEAsGg/formResponse'; // Google Form URL
             const data = {
                 'entry.366340186': testID, // Unique Test ID
-                'entry.1502334890': pAppeared, // 'P' appeared count
-                'entry.606959625': pCorrect, // Correct 'P' inputs
-                'entry.843480235': pMissed, // Missed 'P' inputs
+                'entry.1502334890': bAppeared, // 'B' appeared count
+                'entry.606959625': bCorrect, // Correct 'B' inputs
+                'entry.843480235': bMissed, // Missed 'B' inputs
                 'entry.717468922': wrongKeyCount // Wrong keys pressed
             };
             alert("Submitted Successfully")
@@ -215,7 +214,7 @@
         }
 
         // Function to download results
-        
+    
 
         // Start button event listener
         startBtn.addEventListener('click', startTest);
