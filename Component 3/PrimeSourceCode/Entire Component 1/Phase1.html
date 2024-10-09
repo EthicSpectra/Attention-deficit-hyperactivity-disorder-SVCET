@@ -1,4 +1,3 @@
-<!-- GANESH -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,11 +59,9 @@
     <input id="input-box" type="text" disabled>
     <button id="start-btn">Start Test</button>
     <button id="next-page-btn" onclick="window.location.href='nextPage.html'">Continue Test</button>
-    <!-- <button id="download-btn" onclick="downloadResults()">Download Results</button> -->
 
     <!-- Submit Form -->
     <form id="submit-form" onsubmit="submitResultsToGoogleForm(); return false;">
-        <!-- <button type="submit">Submit Results</button> -->
     </form>
 
     <script>
@@ -84,6 +81,16 @@
         let nextPageButtonVisible = false; // Flag to track if the next page button is visible
         let testID; // To hold the unique test ID
 
+        // Retrieve the test ID from localStorage
+        testID = localStorage.getItem('testID');
+
+        // If a test ID is found, display it
+        if (testID) {
+            document.getElementById('test-id').innerText = testID;
+        } else {
+            console.error("No test ID found.");
+        }
+
         // HTML elements
         let timerElement = document.getElementById('timer');
         let letterBox = document.getElementById('letter-box');
@@ -100,9 +107,11 @@
             inputBox.focus(); // Auto-focus input box
 
             // Generate a unique test ID
-            Math.seed = 12345;
             testID = 'ID-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
             document.getElementById('test-id').innerText = testID;
+
+            // Store the test ID in localStorage so it can be retrieved later
+            localStorage.setItem('testID', testID);
 
             // Start countdown
             countdown = setInterval(() => {
@@ -198,26 +207,29 @@
                 'entry.366340186': testID, // Unique Test ID
                 'entry.1502334890': pAppeared, // 'P' appeared count
                 'entry.606959625': pCorrect, // Correct 'P' inputs
-                'entry.843480235': pMissed, // Missed 'P' inputs
-                'entry.717468922': wrongKeyCount // Wrong keys pressed
+                'entry.1978506081': pMissed, // Missed 'P' inputs
+                'entry.760622981': wrongKeyCount // Wrong keys pressed
             };
-            alert("Submitted Successfully")
 
-            const params = new URLSearchParams(data).toString();
+            // Create the form data object
+            const formData = new FormData();
 
+            for (let key in data) {
+                formData.append(key, data[key]);
+            }
+
+            // Send data to Google Form using fetch
             fetch(formURL, {
                 method: 'POST',
-                body: params,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
+                body: formData
+            }).then(response => {
+                console.log('Results submitted successfully!');
+            }).catch(error => {
+                console.error('Error submitting results:', error);
             });
         }
 
-        // Function to download results
-        
-
-        // Start button event listener
+        // Add event listener for the start button
         startBtn.addEventListener('click', startTest);
     </script>
 </body>

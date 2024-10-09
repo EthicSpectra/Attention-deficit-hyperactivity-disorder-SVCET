@@ -91,9 +91,14 @@
             inputBox.disabled = false; // Enable input
             inputBox.focus(); // Auto-focus input box
 
-            // Generate a unique test ID
-            testID = 'ID-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
-            document.getElementById('test-id').innerText = testID;
+            const testID = localStorage.getItem('testID');
+
+// Display the test ID on the page
+if (testID) {
+document.getElementById('test-id').textContent = testID;
+} else {
+document.getElementById('test-id').textContent = 'Test ID not found!';
+}
 
             // Start countdown
             countdown = setInterval(() => {
