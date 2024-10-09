@@ -1,0 +1,26 @@
+https://docs.google.com/forms/d/e/1FAIpQLSe3LPtiiBOeowHxt_WX8Fv-Jluz-KYm8OZY6c77B4atR33WIQ/formResponse
+
+FORM ID-1FAIpQLSe3LPtiiBOeowHxt_WX8Fv-Jluz-KYm8OZY6c77B4atR33WIQ
+
+
+function submitResultsToGoogleForm() {
+            const formURL = 'https://docs.google.com/forms/d/e/1FAIpQLSe3LPtiiBOeowHxt_WX8Fv-Jluz-KYm8OZY6c77B4atR33WIQ/formResponse'; 
+            const data = {
+                'entry.1547329723': testID, // Unique Test ID
+                'entry.234930441': bAppeared, // 'B' appeared count
+                'entry.71736191': bCorrect, // Correct 'B' inputs
+                'entry.2134272409': bMissed, // Missed 'B' inputs
+                'entry.565893164': wrongKeyCount // Wrong keys pressed
+            };
+            alert("Submitted Successfully")
+
+            const params = new URLSearchParams(data).toString();
+
+            fetch(formURL, {
+                method: 'POST',
+                body: params,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            });
+        }
