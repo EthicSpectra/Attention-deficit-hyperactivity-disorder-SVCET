@@ -1,0 +1,21 @@
+function submitResultsToGoogleForm() {
+            const formURL = 'https://docs.google.com/forms/d/e/1FAIpQLScRYDwHC4-w5ASMk4UqmYz8TH6jWRIwuvLJ-zF5WTcosEAsGg/formResponse'; // Google Form URL
+            const data = {
+
+                //new entry nodes
+                'entry.366340186': testID, // Unique Test ID
+                'entry.1502334890': pAppeared, // 'P' appeared count
+                'entry.606959625': pCorrect, // Correct 'P' inputs
+                'entry.1978506081': pMissed, // Missed 'P' inputs
+                'entry.760622981': wrongKeyCount // Wrong keys pressed
+
+
+                //old Entry nodes
+
+
+                'entry.1547329723': testID, // Unique Test ID
+                'entry.606959625': bAppeared, // 'p' appeared count
+                'entry.717468922': bCorrect, // Correct 'p' inputs
+                'entry.843480235': bMissed, // Missed 'p' inputs
+                'entry.1502334890': wrongKeyCount // Wrong keys pressed
+};
