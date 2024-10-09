@@ -1,4 +1,3 @@
-<!-- GANESH -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +36,7 @@
         #next-page-btn, #download-btn {
             display: none; /* Hide initially */
         }
-        #b-stats {
+        #d-stats {
             position: absolute;
             top: 10px;
             left: 10px;
@@ -48,11 +47,11 @@
     </style>
 </head>
 <body>
-    <div id="b-stats">
+    <div id="d-stats">
         <p>Unique Test ID: <span id="test-id"></span></p>
-        <p>Number of times 'B' appeared: <span id="b-count">0</span></p>
-        <p>Correct 'B' inputs: <span id="b-correct">0</span></p>
-        <p>Missed 'B' inputs: <span id="b-missed">0</span></p>
+        <p>Number of times 'D' appeared: <span id="d-count">0</span></p>
+        <p>Correct 'D' inputs: <span id="d-correct">0</span></p>
+        <p>Missed 'D' inputs: <span id="d-missed">0</span></p>
         <p>Wrong keys pressed: <span id="wrong-keys">0</span></p>
     </div>
     <div id="timer">45</div>
@@ -60,12 +59,6 @@
     <input id="input-box" type="text" disabled>
     <button id="start-btn">Start Test</button>
     <button id="next-page-btn" onclick="window.location.href='nextPage.html'">Continue Test</button>
-    <!-- <button id="download-btn" onclick="downloadResults()">Download Results</button> -->
-
-    <!-- Submit Form -->
-    <form id="submit-form" onsubmit="submitResultsToGoogleForm(); return false;">
-        <!-- <button type="submit">Submit Results</button> -->
-    </form>
 
     <script>
         let timeLeft = 45;
@@ -73,9 +66,9 @@
         const maxInputs = 40; // Maximum allowed inputs
         const letters = ['P', 'B', 'D', 'Q', 'R'];
         let lastLetter = '';
-        let bAppeared = 0; // Track how many times 'B' appears
-        let bCorrect = 0; // Track how many times 'B' was correctly input by the user
-        let bMissed = 0; // Track how many times 'B' was missed or incorrectly input
+        let dAppeared = 0; // Track how many times 'D' appears
+        let dCorrect = 0; // Track how many times 'D' was correctly input by the user
+        let dMissed = 0; // Track how many times 'D' was missed or incorrectly input
         let wrongKeyCount = 0; // Track how many wrong keys are pressed
         let currentLetter = ''; // Track the current letter displayed
         const letterChangeInterval = 560; // Fixed interval for letter changes (in milliseconds)
@@ -88,10 +81,9 @@
         let timerElement = document.getElementById('timer');
         let letterBox = document.getElementById('letter-box');
         let inputBox = document.getElementById('input-box');
-        let bStatsElement = document.getElementById('b-stats');
+        let dStatsElement = document.getElementById('d-stats');
         let startBtn = document.getElementById('start-btn');
         let nextPageBtn = document.getElementById('next-page-btn');
-        let downloadBtn = document.getElementById('download-btn');
 
         // Function to start the test
         function startTest() {
@@ -111,7 +103,6 @@
                     inputBox.disabled = true; // Disable input after time's up or inputs complete
                     submitResultsToGoogleForm(); // Submit results to Google Form
                     showNextPageButton(); // Show button to go to next page
-                    downloadBtn.style.display = 'block'; // Show the download button
                 } else {
                     timerElement.textContent = timeLeft;
                     timeLeft--;
@@ -130,18 +121,18 @@
         function getNextLetter() {
             let newLetter;
 
-            if (bAppeared < 40) {
-                // Ensure 'B' is shown
-                if (lastLetter !== 'B') {
-                    newLetter = 'B';
-                    bAppeared++; // Increment 'B' appearance count
+            if (dAppeared < 40) {
+                // Ensure 'D' is shown
+                if (lastLetter !== 'D') {
+                    newLetter = 'D';
+                    dAppeared++; // Increment 'D' appearance count
                 } else {
                     do {
                         newLetter = letters[Math.floor(Math.random() * letters.length)];
-                    } while (newLetter === lastLetter || newLetter === 'B');
+                    } while (newLetter === lastLetter || newLetter === 'D');
                 }
             } else {
-                // Once 'B' is shown 40 times, use random letters
+                // Once 'D' is shown 40 times, use random letters
                 do {
                     newLetter = letters[Math.floor(Math.random() * letters.length)];
                 } while (newLetter === lastLetter);
@@ -150,7 +141,7 @@
             // Update the last letter
             lastLetter = newLetter;
             currentLetter = newLetter; // Keep track of the current letter
-            updateBStats(); // Update the real-time tracking window
+            updateDStats(); // Update the real-time tracking window
             return newLetter;
         }
 
@@ -160,12 +151,12 @@
                 const userInput = event.target.value.toUpperCase();
 
                 if (userInput === currentLetter) {
-                    if (currentLetter === 'B') {
-                        bCorrect++; // Increment correct 'B' input count
+                    if (currentLetter === 'D') {
+                        dCorrect++; // Increment correct 'D' input count
                     }
                 } else {
-                    if (currentLetter === 'B') {
-                        bMissed++; // Increment missed 'B' count
+                    if (currentLetter === 'D') {
+                        dMissed++; // Increment missed 'D' count
                     } else {
                         wrongKeyCount++; // Increment wrong keys pressed
                     }
@@ -173,15 +164,15 @@
 
                 inputCount++; // Increment input count
                 event.target.value = ''; // Clear the input field
-                updateBStats(); // Update the real-time tracking window
+                updateDStats(); // Update the real-time tracking window
             }
         });
 
         // Function to update the statistics display
-        function updateBStats() {
-            document.getElementById('b-count').innerText = bAppeared;
-            document.getElementById('b-correct').innerText = bCorrect;
-            document.getElementById('b-missed').innerText = bMissed;
+        function updateDStats() {
+            document.getElementById('d-count').innerText = dAppeared;
+            document.getElementById('d-correct').innerText = dCorrect;
+            document.getElementById('d-missed').innerText = dMissed;
             document.getElementById('wrong-keys').innerText = wrongKeyCount;
         }
 
@@ -195,9 +186,9 @@
             const formURL = 'https://docs.google.com/forms/d/e/1FAIpQLScRYDwHC4-w5ASMk4UqmYz8TH6jWRIwuvLJ-zF5WTcosEAsGg/formResponse'; // Google Form URL
             const data = {
                 'entry.366340186': testID, // Unique Test ID
-                'entry.1502334890': bAppeared, // 'B' appeared count
-                'entry.606959625': bCorrect, // Correct 'B' inputs
-                'entry.843480235': bMissed, // Missed 'B' inputs
+                'entry.1502334890': dAppeared, // 'D' appeared count
+                'entry.606959625': dCorrect, // Correct 'D' inputs
+                'entry.843480235': dMissed, // Missed 'D' inputs
                 'entry.717468922': wrongKeyCount // Wrong keys pressed
             };
             alert("Submitted Successfully")
@@ -212,9 +203,6 @@
                 },
             });
         }
-
-        // Function to download results
-    
 
         // Start button event listener
         startBtn.addEventListener('click', startTest);
